@@ -55,23 +55,16 @@ sigmoid <- function(x, infl=0, scale=1, log=FALSE, oneminus = FALSE){
 #' rbetasigmoid(3, a=19, b=39)
 #' @export
 dbetasigmoid <- function(x,  a=1, b=1, infl=0, scale=1, log=FALSE){
-  rval <- dbeta_log_input(sigmoid(x, infl=infl, scale=scale, log=TRUE),
-                  sigmoid(x, infl=infl, scale=scale, log=TRUE, oneminus = TRUE),
-                  a, b, log=TRUE) +
-    sigmoid(x, infl=infl, scale=scale, log=TRUE) +
-    sigmoid(x, infl=infl, scale=scale, log=TRUE, oneminus = TRUE) -
-    log(abs(scale))
+  sigx <- sigmoid(x, infl=infl, scale=scale, log=TRUE)
+  sig1mx <- sigmoid(x, infl=infl, scale=scale, log=TRUE, oneminus = TRUE)
+  rval <- sigx * (a - 1) + sig1mx * (b - 1) - lbeta(a, b) +
+    sigx + sig1mx - log(abs(scale))
   if(! log){
     exp(rval)
   }else{
    rval
   }
 }
-
-dbeta_log_input <- function(logx, log1mx, a, b, log = FALSE){
-  logx * (a - 1) + log1mx * (b - 1) - lbeta(a, b)
-}
-
 
 #' @rdname dbetasigmoid
 #' @export
