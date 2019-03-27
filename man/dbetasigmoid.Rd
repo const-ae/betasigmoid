@@ -7,15 +7,21 @@
 \alias{qbetasigmoid}
 \title{Beta-Sigmoid probability distribution}
 \usage{
-dbetasigmoid(x, a = 1, b = 1, infl = 0, scale = 1, log = FALSE)
+dbetasigmoid(x, a = 1, b = 1, infl = 0, scale = 1, mean = infl +
+  scale * (digamma(a) - digamma(b)), sd = scale * sqrt(trigamma(a) +
+  trigamma(b)), log = FALSE)
 
-rbetasigmoid(n, a = 1, b = 1, infl = 0, scale = 1)
+rbetasigmoid(n, a = 1, b = 1, infl = 0, scale = 1, mean = infl +
+  scale * (digamma(a) - digamma(b)), sd = scale * sqrt(trigamma(a) +
+  trigamma(b)))
 
-pbetasigmoid(q, a = 1, b = 1, infl = 0, scale = 1,
-  lower.tail = TRUE, log.p = FALSE)
+pbetasigmoid(q, a = 1, b = 1, infl = 0, scale = 1, mean = infl +
+  scale * (digamma(a) - digamma(b)), sd = scale * sqrt(trigamma(a) +
+  trigamma(b)), lower.tail = TRUE, log.p = FALSE)
 
-qbetasigmoid(p, a = 1, b = 1, infl = 0, scale = 1,
-  lower.tail = TRUE, log.p = FALSE)
+qbetasigmoid(p, a = 1, b = 1, infl = 0, scale = 1, mean = infl +
+  scale * (digamma(a) - digamma(b)), sd = scale * sqrt(trigamma(a) +
+  trigamma(b)), lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
 \item{x, q}{vector of quantiles}
@@ -26,6 +32,9 @@ They correspond to the `shape1` and `shape2` parameters of the Beta distribution
 \item{infl}{position of the inflection point of the sigmoid. Default: 0}
 
 \item{scale}{positive number that describes how broad the sigmoid is. Default: 1}
+
+\item{mean, sd}{mean and standard deviation of the distribution. It is an alternative
+parametrization to \code{infl} and \code{scale} only use either of the two.}
 
 \item{log, log.p}{logical; if `TRUE`, probabilities are given as log(p)}
 

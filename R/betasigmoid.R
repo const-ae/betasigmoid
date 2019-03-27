@@ -41,6 +41,8 @@ sigmoid <- function(x, infl=0, scale=1, log=FALSE, oneminus = FALSE){
 #'    They correspond to the `shape1` and `shape2` parameters of the Beta distribution. Default: 1
 #' @param infl position of the inflection point of the sigmoid. Default: 0
 #' @param scale positive number that describes how broad the sigmoid is. Default: 1
+#' @param mean,sd mean and standard deviation of the distribution. It is an alternative
+#'    parametrization to \code{infl} and \code{scale} only use either of the two.
 #' @param log,log.p logical; if `TRUE`, probabilities are given as log(p)
 #' @param lower.tail logical; if `TRUE` (default), probabilities are `P[X < x]`, otherwise `P[X > x]`
 #' \deqn{x \sim \mathrm{BetaSigmoid}(\alpha, \beta)}{x ~ BetaSigmoid(a, b, i, s)}
@@ -54,7 +56,28 @@ sigmoid <- function(x, infl=0, scale=1, log=FALSE, oneminus = FALSE){
 #' qbetasigmoid(0.8, a=3, b=3, infl=0, scale=0.5)
 #' rbetasigmoid(3, a=19, b=39)
 #' @export
-dbetasigmoid <- function(x,  a=1, b=1, infl=0, scale=1, log=FALSE){
+dbetasigmoid <- function(x,  a=1, b=1, infl=0, scale=1,
+                         mean = infl + scale * (digamma(a) - digamma(b)),
+                         sd =  scale * sqrt(trigamma(a) + trigamma(b)),
+                         log=FALSE){
+
+  # Alternative parameterization using mu and sd
+  if (!missing(infl) && !missing(mean)) {
+    if (abs((infl + scale * (digamma(a) - digamma(b))) - mu) < 1e-15)
+      warning("specify 'infl' or 'mean' but not both")
+    else stop("specify 'infl' or 'mean' but not both")
+  }
+  if (!missing(scale) && !missing(sd)) {
+    if (abs(( scale * sqrt(trigamma(a) + trigamma(b))) - sd) < 1e-15)
+      warning("specify 'scale' or 'sd' but not both")
+    else stop("specify 'scale' or 'sd' but not both")
+  }
+
+  scale <- sd / sqrt((trigamma(a) + trigamma(b)))
+  infl <- mean - scale * (digamma(a) - digamma(b))
+  # End Alternative parameterization
+
+
   sigx <- sigmoid(x, infl=infl, scale=scale, log=TRUE)
   sig1mx <- sigmoid(x, infl=infl, scale=scale, log=TRUE, oneminus = TRUE)
   rval <- sigx * (a - 1) + sig1mx * (b - 1) - lbeta(a, b) +
@@ -68,19 +91,72 @@ dbetasigmoid <- function(x,  a=1, b=1, infl=0, scale=1, log=FALSE){
 
 #' @rdname dbetasigmoid
 #' @export
-rbetasigmoid <- function(n, a=1, b=1, infl=0, scale=1){
+rbetasigmoid <- function(n, a=1, b=1, infl=0, scale=1,
+                         mean = infl + scale * (digamma(a) - digamma(b)),
+                         sd =  scale * sqrt(trigamma(a) + trigamma(b))){
+  # Alternative parameterization using mu and sd
+  if (!missing(infl) && !missing(mean)) {
+    if (abs((infl + scale * (digamma(a) - digamma(b))) - mu) < 1e-15)
+      warning("specify 'infl' or 'mean' but not both")
+    else stop("specify 'infl' or 'mean' but not both")
+  }
+  if (!missing(scale) && !missing(sd)) {
+    if (abs(( scale * sqrt(trigamma(a) + trigamma(b))) - sd) < 1e-15)
+      warning("specify 'scale' or 'sd' but not both")
+    else stop("specify 'scale' or 'sd' but not both")
+  }
+
+  scale <- sd / sqrt((trigamma(a) + trigamma(b)))
+  infl <- mean - scale * (digamma(a) - digamma(b))
+  # End Alternative parameterization
   logit(stats::rbeta(n, shape1=a, shape2=b)) * scale + infl
 }
 
 #' @rdname dbetasigmoid
 #' @export
-pbetasigmoid <- function(q, a=1, b=1, infl=0, scale=1, lower.tail=TRUE, log.p=FALSE){
+pbetasigmoid <- function(q, a=1, b=1, infl=0, scale=1,
+                         mean = infl + scale * (digamma(a) - digamma(b)),
+                         sd =  scale * sqrt(trigamma(a) + trigamma(b)),
+                         lower.tail=TRUE, log.p=FALSE){
+  # Alternative parameterization using mu and sd
+  if (!missing(infl) && !missing(mean)) {
+    if (abs((infl + scale * (digamma(a) - digamma(b))) - mu) < 1e-15)
+      warning("specify 'infl' or 'mean' but not both")
+    else stop("specify 'infl' or 'mean' but not both")
+  }
+  if (!missing(scale) && !missing(sd)) {
+    if (abs(( scale * sqrt(trigamma(a) + trigamma(b))) - sd) < 1e-15)
+      warning("specify 'scale' or 'sd' but not both")
+    else stop("specify 'scale' or 'sd' but not both")
+  }
+
+  scale <- sd / sqrt((trigamma(a) + trigamma(b)))
+  infl <- mean - scale * (digamma(a) - digamma(b))
+  # End Alternative parameterization
   stats::pbeta(sigmoid(q, infl=infl, scale=scale), shape1=a, shape2=b, lower.tail=lower.tail, log.p=log.p)
 }
 
 #' @rdname dbetasigmoid
 #' @export
-qbetasigmoid <- function(p, a=1, b=1, infl=0, scale=1, lower.tail=TRUE, log.p=FALSE){
+qbetasigmoid <- function(p, a=1, b=1, infl=0, scale=1,
+                         mean = infl + scale * (digamma(a) - digamma(b)),
+                         sd =  scale * sqrt(trigamma(a) + trigamma(b)),
+                         lower.tail=TRUE, log.p=FALSE){
+  # Alternative parameterization using mu and sd
+  if (!missing(infl) && !missing(mean)) {
+    if (abs((infl + scale * (digamma(a) - digamma(b))) - mu) < 1e-15)
+      warning("specify 'infl' or 'mean' but not both")
+    else stop("specify 'infl' or 'mean' but not both")
+  }
+  if (!missing(scale) && !missing(sd)) {
+    if (abs(( scale * sqrt(trigamma(a) + trigamma(b))) - sd) < 1e-15)
+      warning("specify 'scale' or 'sd' but not both")
+    else stop("specify 'scale' or 'sd' but not both")
+  }
+
+  scale <- sd / sqrt((trigamma(a) + trigamma(b)))
+  infl <- mean - scale * (digamma(a) - digamma(b))
+  # End Alternative parameterization
   logit(stats::qbeta(p, shape1=a, shape2=b, lower.tail=lower.tail, log.p=log.p), infl=infl, scale=scale)
 }
 
