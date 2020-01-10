@@ -6,13 +6,13 @@
 #' @param scale the width of the sigmoid
 #'
 #' @export
-logit <- function(x, infl=0, scale=1){
+logit <- function(x, infl=0, scale=1, oneminus = FALSE){
   # infl + scale * log(x/(1-x))
   if(scale < 0){
     scale <- -scale
     oneminus <- ! oneminus
   }
-  qlogis(x, location=infl, scale=scale, log.p = log, lower.tail = ! oneminus)
+  qlogis(x, location=infl, scale=scale, log.p = FALSE, lower.tail = ! oneminus)
 }
 
 #' @rdname logit
