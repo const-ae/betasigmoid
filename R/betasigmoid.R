@@ -160,6 +160,9 @@ qbetasigmoid <- function(p, a=1, b=1, infl=0, scale=1,
   logit(stats::qbeta(p, shape1=a, shape2=b, lower.tail=lower.tail, log.p=log.p), infl=infl, scale=scale)
 }
 
+mode_betasigmoid <- function(a=1, b=1, infl=0, scale = 1){
+  infl + scale * (log(a) - log(b))
+}
 
 mean_betasigmoid <- function(a=1, b=1, infl=0, scale = 1){
    infl + scale * (digamma(a) - digamma(b))
