@@ -5,7 +5,7 @@
 \alias{sigmoid}
 \title{Logit and Sigmoid function}
 \usage{
-logit(x, infl = 0, scale = 1)
+logit(x, infl = 0, scale = 1, oneminus = FALSE)
 
 sigmoid(x, infl = 0, scale = 1, log = FALSE, oneminus = FALSE)
 }
