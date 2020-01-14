@@ -2,7 +2,10 @@
 
 export(dbetasigmoid)
 export(logit)
+export(mean_betasigmoid)
+export(mode_betasigmoid)
 export(pbetasigmoid)
 export(qbetasigmoid)
 export(rbetasigmoid)
 export(sigmoid)
+export(var_betasigmoid)
